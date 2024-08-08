@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Upload</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+</head>
+<body>
+  <svg style="position: absolute; width: 0; height: 0;" width="0" height="0" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="svg-sprite">
+    <defs>
+        <filter id="filter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.000001 0.000001" numOctaves="1" result="warp" seed="1"></feTurbulence>
+            <feDisplacementMap xChannelSelector="R" yChannelSelector="G" scale="30" in="SourceGraphic" in2="warp"></feDisplacementMap>
+        </filter>
+    </defs>
+  </svg>
+  <div class="container">
+    <h1>동영상 업로드</h1>
+    <form action="/upload_video" method="POST" enctype="multipart/form-data" id="upload-form">
+      <input type="file" name="video" accept="video/*" onchange="previewVideo(event)">
+      <video id="video-preview" width="500" height="480" controls style="display:none; margin: 0 auto;">
+        <source id="video-source" src="" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <div class="body-section">
+        <div class="half">
+          <div class="btn btn-small btn-dark btn-glitch" onclick="document.getElementById('upload-form').submit()">업로드</div>
+        </div>
+      </div>
+    </form>
+
+    {% if best_faces %}
+    <h2>지워버리고 싶은 인간 선택</h2>
+    <form action="/submit_face" method="POST" id="submit-face-form">
+      <div class="faces-container" id="faces-container">
+        {% for face in best_faces %}
+          <div class="face-item">
+            <img src="{{ url_for('static', filename='videos/' + video_name + '/best_faces/' + face) }}" alt="Best Face">
+            <label>
+              <input type="radio" name="selected_face" value="{{ loop.index0 + 1 }}" onchange="showSelectedFace('{{ video_name }}', '{{ loop.index0 + 1 }}')">
+              선택
+            </label>
+          </div>
+        {% endfor %}
+        <div id="selected-face-container" style="display:none;">
+          <h3>선택된 인물</h3>
+          <img id="selected-face-image" src="" alt="Selected Face" style="max-width: 200px;">
+        </div>
+      </div>
+      <input type="hidden" name="video_name" value="{{ video_name }}">
+      <div class="body-section">
+        <div class="half">
+          <div class="btn btn-small btn-dark btn-glitch" onclick="document.getElementById('submit-face-form').submit()">제출</div>
+        </div>
+      </div>
+    </form>
+    {% endif %}
+
+    {% if video_path %}
+    <h2>결과 동영상</h2>
+    <video width="640" height="480" controls>
+      <source src="{{ video_path }}" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <form action="/inpaint" method="POST" id="inpaint-form">
+      <input type="hidden" name="video_name" value="{{ video_name }}">
+      <div class="body-section">
+        <div class="half">
+          <div class="btn btn-small btn-dark btn-glitch" onclick="document.getElementById('inpaint-form').submit()">얘 지울거임?</div>
+        </div>
+      </div>
+    </form>
+    {% endif %}
+
+    {% if inp_video_path %}
+    <h2>인페인팅 결과 동영상</h2>
+    <video width="640" height="480" controls>
+      <source src="{{ inp_video_path }}" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+        <form action="/re_inpaint" method="POST">
+            <input type="hidden" name="video_name" value="{{ video_name }}">
+            <p><input type="submit" value="re_inpaint"></p>
+        </form>
+    {% endif %}
+  </div>
+
+  <script>
+    function previewVideo(event) {
+      const file = event.target.files[0];
+      const videoPreview = document.getElementById('video-preview');
+      const videoSource = document.getElementById('video-source');
+
+      if (file) {
+        const url = URL.createObjectURL(file);
+        videoSource.src = url;
+        videoPreview.style.display = 'block';
+        videoPreview.load();
+      }
+    }
+
+    function showSelectedFace(videoName, faceId) {
+      const container = document.getElementById('selected-face-container');
+      const img = document.getElementById('selected-face-image');
+
+      img.src = `/static/videos/${videoName}/seg_images/ID_${faceId}_Seg.jpg`;
+      img.alt = `Selected Face ID ${faceId}`;
+      container.style.display = 'block';
+    }
+
+    var $text = document.querySelector('.btn-glitch-active'),
+        $filter = document.querySelector('.svg-sprite'),
+        $turb = $filter.querySelector('#filter feTurbulence'),
+        turbVal = { val: 0.000001 },
+        turbValX = { val: 0.000001 };
+
+    var glitchTimeline = function() {
+        var timeline = gsap.timeline({
+            repeat: -1,
+            repeatDelay: 2,
+            paused: true,
+            onUpdate: function () {
+                $turb.setAttribute('baseFrequency', turbVal.val + ' ' + turbValX.val);
+            }
+        });
+
+        timeline
+            .to(turbValX, 0.1, { val: 0.5 })
+            .to(turbVal, 0.1, { val: 0.02 });
+        timeline
+            .set(turbValX, { val: 0.000001 })
+            .set(turbVal, { val: 0.000001 });
+        timeline
+            .to(turbValX, 0.2, { val: 0.4 }, 0.4)
+            .to(turbVal, 0.2, { val: 0.002 }, 0.4);
+        timeline
+            .set(turbValX, { val: 0.000001 })
+            .set(turbVal, { val: 0.000001 });
+
+        return {
+            start: function() {
+                timeline.play(0);
+            },
+            stop: function() {
+                timeline.pause();
+            }
+        };
+    };
+
+    var btnGlitch = glitchTimeline();
+
+    $('.btn-glitch')
+        .on('mouseenter', function () {
+            $(this).addClass('btn-glitch-active');
+            btnGlitch.start();
+        })
+        .on('mouseleave', function () {
+            var $this = $(this);
+            if ( $this.hasClass('btn-glitch-active') ) {
+                $this.removeClass('btn-glitch-active');
+                btnGlitch.stop();
+            }
+        });
+  </script>
+</body>
+</html>

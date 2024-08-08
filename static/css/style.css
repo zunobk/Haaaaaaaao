@@ -1,0 +1,290 @@
+/* 스타일 초기화 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+    line-height: 1.6;
+  }
+  
+  h1, h2, h3 {
+    text-align: center;
+    color: #e0e0e0;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  
+  h1 {
+    font-size: 2.5rem;
+    margin-top: 40px;
+  }
+  
+  h2 {
+    font-size: 1.75rem;
+    margin-top: 40px;
+  }
+  
+  h3 {
+    font-size: 1.25rem;
+    margin-top: 20px;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+    transition: box-shadow 0.3s ease-in-out;
+  }
+  
+  form:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+  }
+  
+  input[type="file"], input[type="text"], button {
+    width: calc(100% - 24px);
+    margin: 10px 0;
+    padding: 15px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  input[type="file"]:focus, input[type="text"]:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+  }
+  
+  button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, transform 0.2s;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+  }
+  
+  button:active {
+    background-color: #004494;
+    transform: translateY(0);
+  }
+  
+  video {
+    display: block;
+    margin: 20px auto;
+    border: 1px solid #444;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+  }
+  
+  video:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+    transform: scale(1.05);
+  }
+  
+  .faces-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .face-item {
+    margin: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .face-item img {
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  }
+  
+  .face-item img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+  }
+  
+  .face-item input[type="radio"] {
+    margin-top: 10px;
+    transform: scale(1.5);
+    cursor: pointer;
+  }
+  
+  #selected-face-container {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  #selected-face-image {
+    max-width: 200px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  body {
+    animation: fadeIn 1s ease-in-out;
+  }
+  
+  form, h1, h2, h3, video, img {
+    animation: slideUp 0.5s ease-in-out;
+  }
+  
+  /* 추가된 스타일 */
+  body {
+    font-family: 'Roboto Mono', sans-serif;
+    background: #121212;
+  }
+  
+  .body-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  
+  .half {
+    flex: 0 0 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .btn {
+    font-family: 'Roboto Mono', sans-serif;
+    font-weight: 500;
+    border: 1px solid #121212;
+    line-height: 1.5;
+    font-size: 14px;
+    padding: 16px;
+    width: 100%;
+    display: block;
+    cursor: pointer;
+    position: relative;
+    background-color: #fff;
+    color: #000; /* 글씨 색상을 검은색으로 설정 */
+    overflow: hidden;
+    outline: none;
+    text-decoration: none;
+    text-align: center;
+    vertical-align: bottom;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  .btn:hover {
+    background-color: #121212;
+    color: #fff;
+  }
+  
+  .btn-glitch {
+    transform: translateZ(0);
+    overflow: visible;
+  }
+  
+  .btn-glitch-active {
+    filter: url('#filter');
+  }
+  
+  .btn-glitch-active::after,
+  .btn-glitch-active::before {
+    content: '';
+    width: 1px;
+    position: absolute;
+    top: -1px;
+    bottom: -1px;
+  }
+  
+  .btn-glitch-active::after {
+    left: -2px;
+    background-color: #ff536b;
+    animation: colorshift-red 2.6s infinite;
+    animation-timing-function: step-end;
+  }
+  
+  .btn-glitch-active::before {
+    right: -2px;
+    background-color: #3ffeff;
+    animation: colorshift-blue 2.6s infinite;
+    animation-timing-function: step-end;
+  }
+  
+  @keyframes colorshift-red {
+    0%, 7% {
+      background-color: #ff536b;
+    }
+    8%, 18% {
+      background-color: transparent;
+    }
+    19% {
+      background-color: #ff536b;
+      width: 2px;
+    }
+    23%, 100% {
+      background-color: transparent;
+    }
+  }
+  
+  @keyframes colorshift-blue {
+    0%, 7% {
+      background-color: #3ffeff;
+    }
+    8%, 18% {
+      background-color: transparent;
+    }
+    19% {
+      background-color: #3ffeff;
+      width: 2px;
+    }
+    23%, 100% {
+      background-color: transparent;
+    }
+  }
+  

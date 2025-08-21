@@ -10,6 +10,7 @@ import numpy as np
 from detectron2.structures import Instances, Boxes
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm  # tqdm 임포트
+import re
 
 
 class Detector:
@@ -80,7 +81,8 @@ class Detector:
         
     def segmentation_image(self, video_state, people_list):
             
-            
+        No_name=[]
+        print("asd")
         for i in range(len(people_list)):
             imagePath = video_state["origin_images_path"]+rf"/{people_list[i]['frame']}.jpg"
             image = cv2.imread(imagePath)
@@ -98,6 +100,9 @@ class Detector:
 
                 mask_image_path = os.path.join(video_state["seg_images_path"], rf"{people_list[i]['ID']}_Seg.jpg")
                 cv2.imwrite(mask_image_path, result_image)
+                number_part = re.search(r'\d+', people_list[i]['ID']).group()
+                No_name.append(number_part)
             except AssertionError:
                 print(f"얼굴인식 실패{people_list[i]['ID']}")
                 continue
+        return No_name

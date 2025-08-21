@@ -77,7 +77,7 @@ def create_video(image_dir, output_video_path, fps=30):
     video.release()
     
 
-def main(origin_images_path, mask_images_path, ouput_path, inpaint_ouput_path, inpainting_images_path):
+def inpainting_video(video_state, user_edit_name):
 
     generator_state_dict = torch.load("weights\states_pt_places2.pth")['G']
 
@@ -94,22 +94,23 @@ def main(origin_images_path, mask_images_path, ouput_path, inpaint_ouput_path, i
     generator = Generator(cnum_in=5, cnum=48, return_flow=False).to(device)
     generator.load_state_dict(generator_state_dict, strict=True)
     # 각 이미지 처리
-    frame_files = natsorted(os.listdir(origin_images_path))
-    mask_files = natsorted(os.listdir(mask_images_path))
+    frame_files = natsorted(os.listdir(video_state['inpainting_images_path']))
+    mask_files = natsorted(os.listdir(video_state['mask_images_path']))
 
     
 
     for frame_file in tqdm(frame_files, desc="Processing frames"):
-        frame_path = os.path.join(origin_images_path, frame_file)
-        mask_path = os.path.join(mask_images_path, frame_file)  # 마스크 파일이 프레임 파일과 같은 이름이라고 가정
-        out_path = os.path.join(inpainting_images_path, frame_file)
+        frame_path = os.path.join(video_state['inpainting_images_path'], frame_file)
+        mask_path = os.path.join(video_state['mask_images_path'], frame_file)  # 마스크 파일이 프레임 파일과 같은 이름이라고 가정
+        out_path = os.path.join(video_state['inpainting_images_path'], frame_file)
 
         if frame_file in mask_files:
             inpaint_image(frame_path, mask_path, out_path, generator, device)
         else:
             image = Image.open(frame_path)
             image.save(out_path)
-
+    
     # 완성된 프레임으로 동영상 생성
-    create_video(inpainting_images_path, ouput_path)
-    convert_video_with_moviepy(input_video_path=ouput_path, output_video_path=inpaint_ouput_path)
+    create_video(video_state['inpainting_images_path'], video_state['inpainting_videos']+f"/{user_edit_name}.mp4")
+    convert_video_with_moviepy(input_video_path=video_state['inpainting_videos']+f"/{user_edit_name}.mp4", 
+                               output_video_path=video_state['web_inpainting_videos']+f"/{user_edit_name}.mp4")

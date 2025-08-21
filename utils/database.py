@@ -10,7 +10,7 @@ class Database():
         try:
             host_name       = "localhost"
             user_name       = "root"
-            user_password   = "1234"
+            user_password   = "1018"
             db_name         = "videostates"
 
             connection = pymysql.connect(

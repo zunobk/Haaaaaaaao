@@ -46,12 +46,11 @@ class InsightFace:
         self.app.prepare(ctx_id=0, det_size=(640, 640))
     
     def process_frames(self, video_state, tolerance=0.4):
-        #파일 정렬
+
         frame_files = sorted(
             [os.path.join(video_state["origin_images_path"], f) for f in os.listdir(video_state["origin_images_path"]) if f.endswith('.png') or f.endswith('.jpg')],
             key=lambda x: extract_number(os.path.basename(x))
             )
-        # os.makedirs('faces', exist_ok=True) # 얼굴 담는 부분?
         with Manager() as manager:
             known_face_encodings = []
             known_face_ids = []

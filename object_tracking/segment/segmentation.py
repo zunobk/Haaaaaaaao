@@ -1,11 +1,11 @@
 
 import numpy as np
-from segment.Segmenter import BaseSegmenter
+from object_tracking.segment.Segmenter import BaseSegmenter
 from PIL import Image, ImageDraw, ImageOps
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from tools.painter import mask_painter, point_painter 
+from object_tracking.tools.painter import mask_painter, point_painter
 
 mask_color = 3
 mask_alpha = 0.7
@@ -20,7 +20,7 @@ contour_width = 5
 
 
 class SamControler():
-    def __init__(self, SAM_checkpoint, device):
+    def __init__(self, SAM_checkpoint='./weights/sam_vit_h_4b8939.pth', device='cuda:0'):
         self.sam_controler = BaseSegmenter(SAM_checkpoint, device)
         
     
@@ -29,8 +29,8 @@ class SamControler():
         it is used in first frame in video
         return: mask, logit, painted image(mask+point)
         '''
-        # self.sam_controler.set_image(image)
-        origal_image = self.sam_controler.orignal_image
+        self.sam_controler.set_image(image)
+        #origal_image = self.sam_controler.orignal_image
         neg_flag = labels[-1]
         if neg_flag==1:
             prompts = {

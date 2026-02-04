@@ -51,25 +51,31 @@ Inpainting 모델을 통해 자연스럽게 배경을 복원합니다.
 
 ### 🔹 정방향 트래킹만 적용한 결과
 
-![그림1](https://github.com/user-attachments/assets/da17b8b9-db86-4722-b810-7bb631f39ff1)
-
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/da17b8b9-db86-4722-b810-7bb631f39ff1" width="820" alt="정방향 트래킹만 적용한 결과"/>
+</p>
 ---
 
 ### 🔹 양방향 트래킹 적용 후 결과
 
-![그림2](https://github.com/user-attachments/assets/535e4581-24e3-476b-adac-baec6f9df0ac)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/535e4581-24e3-476b-adac-baec6f9df0ac" width="820" alt="양방향 트래킹 적용 후 결과"/>
+</p>
 
 ---
 
 ## 🔧 트러블슈팅
 
 ### 문제
-- 정방향 트래킹만 적용할 경우 특정 구간에서 추적이 끊기거나 정확도가 저하되는 현상이 발생
+정방향(Forward) 트래킹만 적용했을 때,  
+대상 인물이 **화면 밖으로 잠시 이탈했다가 다시 화면에 재등장하는 구간**에서  
+트래킹이 잠깐 끊기며 ID가 흔들리거나 마스크가 누락되는 현상이 발생했습니다.
 
 ### 해결
-- 영상 프레임을 역순으로 처리하는 **역방향 트래킹을 추가 적용**
-- 정방향 트래킹 결과와 역방향 트래킹 결과를 결합하는 방식으로  
-  전체 구간에서의 추적 안정성과 정확도를 개선
+- 영상 프레임을 역순으로 처리하는 **역방향(Backward) 트래킹**을 추가 적용  
+- 정방향 트래킹 결과와 역방향 트래킹 결과를 결합하여  
+  재등장 구간에서도 추적이 이어지도록 보완했고,  
+  전체 구간에서의 추적 안정성과 정확도를 개선했습니다.
 
 ---
 
